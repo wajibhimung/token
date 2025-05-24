@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Manajemen Token Ujian Modern</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007bff; --primary-hover-color: #0056b3;
+            --secondary-color: #6c757d; --secondary-hover-color: #545b62;
+            --danger-color: #dc3545; --danger-hover-color: #c82333;
+            --success-color: #28a745; --success-hover-color: #1e7e34;
+            --info-color: #17a2b8; --info-hover-color: #117a8b; 
+            --light-color: #f8f9fa; --dark-color: #343a40; --text-color: #495057;
+            --border-color: #dee2e6; --background-color: #eef2f7;
+            --card-bg-color: #ffffff; --font-family: 'Poppins', sans-serif;
+            --border-radius: 0.375rem; --box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.075);
+            --input-focus-box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+        }
+        html { font-size: 16px; }
+        body {
+            font-family: var(--font-family); margin: 0; background-color: var(--background-color);
+            color: var(--text-color); display: flex; flex-direction: column;
+            align-items: center; min-height: 100vh; padding: 1rem;
+            box-sizing: border-box; font-size: 0.9375rem; line-height: 1.6;
+        }
+        .container {
+            background-color: var(--card-bg-color); padding: 20px;
+            border-radius: var(--border-radius); box-shadow: var(--box-shadow);
+            width: 100%; max-width: 900px; margin-top: 1rem; margin-bottom: 1rem;
+        }
+        #loginPageContainer {
+            max-width: 400px; margin-top: 8vh; margin-bottom: auto; display: block;
+        }
+        #mainPageContainer { display: none; }
+        
+        h1, h2, h3 {
+            color: var(--dark-color); text-align: center; margin-bottom: 1.5rem; font-weight: 600;
+        }
+        h1 { font-size: 1.6rem; } h2 { font-size: 1.4rem; } h3 { font-size: 1.2rem; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.4rem; font-weight: 500; color: #555; font-size: 0.9rem;}
+        input[type="text"], input[type="password"], input[type="number"], select {
+            width: 100%; padding: 0.65rem 0.9rem; border: 1px solid var(--border-color);
+            border-radius: var(--border-radius); box-sizing: border-box; font-family: var(--font-family);
+            font-size: 0.9rem; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        input::placeholder { color: #999; }
+        input:focus, select:focus {
+            outline: none; border-color: var(--primary-color); box-shadow: var(--input-focus-box-shadow);
+        }
+        .btn {
+            color: white; padding: 0.65rem 1.2rem; border: none; border-radius: var(--border-radius);
+            cursor: pointer; font-size: 0.9rem; font-weight: 500;
+            transition: background-color 0.2s ease, transform 0.1s ease; display: inline-flex;
+            align-items: center; justify-content: center; text-transform: uppercase; letter-spacing: 0.5px;
+            text-decoration: none; 
+        }
+        .btn:hover { transform: translateY(-1px); }
+        .btn:active { transform: translateY(0px); }
+        .btn i { margin-right: 6px; font-size: 0.85em; }
+        .btn-primary { background-color: var(--primary-color); }
+        .btn-primary:hover { background-color: var(--primary-hover-color); }
+        .btn-danger { background-color: var(--danger-color); }
+        .btn-danger:hover { background-color: var(--danger-hover-color); }
+        .btn-secondary { background-color: var(--secondary-color); }
+        .btn-secondary:hover { background-color: var(--secondary-hover-color); }
+        .btn-success { background-color: var(--success-color); }
+        .btn-success:hover { background-color: var(--success-hover-color); }
+        .btn-info { background-color: var(--info-color); } 
+        .btn-info:hover { background-color: var(--info-hover-color); }
+        .btn-block { display: flex; width: 100%; }
+        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+        
+        .message-area {
+            text-align: center; margin: 0.8rem 0; padding: 0.7rem 0.9rem; border-radius: var(--border-radius);
+            display: none; font-size: 0.85rem; border-width: 1px; border-style: solid;
+        }
+        .message-area.success { color: #0f5132; background-color: #d1e7dd; border-color: #badbcc; }
+        .message-area.error { color: #842029; background-color: #f8d7da; border-color: #f5c2c7; }
+        
+        .header-controls {
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 1.2rem; padding-bottom: 0.8rem; border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap; 
+        }
+        .header-controls h2 { margin-bottom: 0; text-align: left; flex-grow: 1; } 
+        .header-controls .btn#logoutButton { margin-left: 1rem; flex-shrink: 0; }
+        
+        .page-actions { 
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 1.2rem; flex-wrap: wrap; gap: 0.5rem; 
+        }
+        
+        .table-container {
+            overflow-x: auto; border: 1px solid var(--border-color);
+            border-radius: var(--border-radius); margin-bottom: 1.2rem;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th, td {
+            border-bottom: 1px solid var(--border-color); padding: 0.7rem 0.8rem; text-align: left;
+            vertical-align: middle; font-size: 0.85rem; white-space: nowrap;
+        }
+        td:nth-child(1), th:nth-child(1) { white-space: normal; } 
+        th {
+            background-color: var(--light-color); color: var(--dark-color); font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.5px; border-bottom-width: 2px;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background-color: #f1f5f9; }
+        
+        .status-badge {
+            padding: 0.25em 0.5em; font-size: 0.7em; font-weight: 600;
+            border-radius: 0.25rem; color: white; display: inline-block;
+        }
+        .status-aktif { background-color: var(--success-color); }
+        .status-nonaktif { background-color: var(--danger-color); }
+        
+        .actions { display: flex; gap: 0.3rem;} 
+        .actions button { margin-right: 0; } 
+        .actions button i { margin-right: 4px; }
+        .actions .btn-primary { background-color: #3B82F6; }
+        .actions .btn-primary:hover { background-color: #2563EB; }
+        
+        .modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+            overflow-y: auto; background-color: rgba(0,0,0,0.6); 
+            align-items: center; justify-content: center; padding: 1rem; box-sizing: border-box;
+        }
+        .modal-content {
+            background-color: var(--card-bg-color); margin: auto; padding: 0; border: none;
+            width: 100%; max-width: 500px; border-radius: var(--border-radius);
+            box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.15); animation: modal-fade-in 0.3s ease-out;
+        }
+        @keyframes modal-fade-in {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0.8rem 1.2rem; border-bottom: 1px solid var(--border-color);
+        }
+        .modal-header h3 { margin: 0; color: var(--primary-color); text-align: left; font-size: 1.1rem; }
+        .close-btn {
+            color: var(--secondary-color); font-size: 1.5rem; font-weight: bold;
+            background: none; border: none; padding: 0; transition: color 0.2s ease;
+        }
+        .close-btn:hover, .close-btn:focus { color: var(--dark-color); cursor: pointer; }
+        .modal-body { padding: 1.2rem; }
+        .modal-footer {
+            padding: 0.8rem 1.2rem; border-top: 1px solid var(--border-color);
+            display: flex; justify-content: flex-end; gap: 0.5rem; 
+        }
+        
+        .loader {
+            border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color); border-radius: 50%;
+            width: 25px; height: 25px; animation: spin 1s linear infinite;
+            margin: 1.2rem auto; display: none;
+        }
+        .btn .loader-inline {
+             border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid #fff; border-radius: 50%;
+             width: 16px; height: 16px; animation: spin 1s linear infinite;
+             margin-left: 6px; display: none;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .pagination-controls {
+            display: flex; justify-content: center; align-items: center;
+            margin-top: 1.5rem; gap: 0.5rem;
+        }
+        .pagination-controls .btn {
+            padding: 0.5rem 0.8rem; font-size: 0.85rem; text-transform: none;
+        }
+        .pagination-controls .page-info { font-size: 0.9rem; color: var(--text-color); }
+        .pagination-controls .btn:disabled {
+            background-color: #e9ecef; color: #6c757d; cursor: not-allowed; transform: none;
+        }
+
+        /* Mobile Specific Overrides */
+        @media (max-width: 575.98px) { 
+            .header-controls { flex-direction: column; align-items: stretch; }
+            .header-controls h2 { text-align: center; margin-bottom: 0.8rem; }
+            .header-controls .btn#logoutButton { margin-left: 0; margin-top: 0.5rem; width: 100%;}
+            
+            .page-actions { 
+                display: grid; /* Menggunakan grid untuk kontrol kolom yang lebih baik */
+                grid-template-columns: 1fr; /* Satu kolom */
+                gap: 0.75rem; 
+            } 
+            .page-actions .btn { 
+                width: 100%; /* Tombol akan mengisi lebar grid cell */
+                padding: 0.7rem 0.8rem; /* Sesuaikan padding untuk mobile */
+                font-size: 0.85rem; 
+                white-space: normal; /* Izinkan teks tombol untuk wrap */
+                text-align: center; 
+                line-height: 1.4; /* Sedikit lebihkan line-height untuk teks wrap */
+                box-sizing: border-box; /* Penting agar padding tidak menambah lebar */
+            }
+
+            .actions { flex-direction: column; } 
+            .actions button { width: 100%; } 
+            .modal-footer { flex-direction: column-reverse; } 
+            .modal-footer .btn { width: 100%; }
+            .pagination-controls .btn { padding: 0.4rem 0.6rem; font-size: 0.8rem; }
+            .pagination-controls .page-info { font-size: 0.85rem; }
+        }
+
+        @media (min-width: 576px) { /* Desktop Overrides */
+            body { padding: 1.5rem; }
+            .container { padding: 25px 30px; margin-top: 2rem;} 
+            #loginPageContainer { max-width: 450px; margin-top: 8vh;}
+            h1 { font-size: 1.8rem; } h2 { font-size: 1.6rem; } h3 { font-size: 1.4rem; }
+            label { font-size: initial; } 
+            input[type="text"], input[type="password"], input[type="number"], select {
+                padding: 0.75rem 1rem; font-size: 0.95rem;
+            }
+            .btn { padding: 0.75rem 1.5rem; font-size: 0.95rem; }
+            .btn i { font-size: initial; }
+            .btn-sm { padding: 0.5rem 1rem; font-size: 0.875rem; }
+            .message-area { font-size: 0.9rem; }
+            .header-controls { flex-direction: row; align-items: center; }
+            .header-controls h2 { text-align: left; margin-bottom: 0; }
+            .header-controls .btn#logoutButton { margin-top: 0; width: auto;}
+             .page-actions .btn { width: auto; /* Kembalikan ke auto untuk desktop */ } 
+            th, td { padding: 0.9rem 1rem; font-size: 0.9rem; }
+            .status-badge { font-size: 0.75em; }
+            .actions { flex-direction: row; } 
+            .actions button { width: auto; } 
+            .modal-content { max-width: 550px; }
+            .modal-header { padding: 1rem 1.5rem; }
+            .modal-header h3 { font-size: 1.25rem; }
+            .close-btn { font-size: 1.75rem; }
+            .modal-body { padding: 1.5rem; }
+            .modal-footer { flex-direction: row; padding: 1rem 1.5rem; } 
+            .modal-footer .btn { width: auto; }
+            .loader { width: 30px; height: 30px; border-width: 5px; margin: 1.5rem auto; }
+            .btn .loader-inline { width: 18px; height: 18px; border-width: 3px; margin-left: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="loginPageContainer" class="container">
+        <h1><i class="fas fa-shield-alt"></i> Login Admin</h1>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required placeholder="Masukkan username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Masukkan password">
+            </div>
+            <button type="submit" id="loginButton" class="btn btn-primary btn-block">
+                <i class="fas fa-sign-in-alt"></i> Login
+                <span class="loader-inline" id="loginButtonLoader"></span>
+            </button>
+        </form>
+        <div id="loginMessage" class="message-area" style="margin-top:1.25rem;"></div>
+    </div>
+
+    <div id="mainPageContainer" class="container">
+        <div class="header-controls">
+            <h2><i class="fas fa-tasks"></i> Manajemen Token Ujian</h2>
+            <button id="logoutButton" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+        <div class="page-actions">
+            <button id="addTokenBtn" class="btn btn-success"><i class="fas fa-plus-circle"></i> Tambah Token Baru</button>
+            <a href="#" id="openSheetBtn" class="btn btn-info" target="_blank" title="Buka Google Sheet (ganti link #)">
+                <i class="fas fa-table-list"></i> Buka Spreadsheet
+            </a>
+        </div>
+        <div id="mainPageMessage" class="message-area"></div>
+        <div class="loader" id="mainLoader"></div>
+        <div class="table-container">
+            <table id="tokenTable">
+                <thead>
+                    <tr>
+                        <th>Mata Pelajaran</th>
+                        <th>Token</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data token akan diisi oleh JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination-controls" id="paginationControls">
+            <!-- Kontrol paginasi akan diisi oleh JavaScript -->
+        </div>
+    </div>
+
+    <div id="tokenModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                 <h3 id="modalTitle"><i class="fas fa-key"></i> Tambah Token</h3>
+                <button class="close-btn" id="closeModalBtn" aria-label="Tutup">×</button>
+            </div>
+            <form id="tokenForm">
+                <div class="modal-body">
+                    <input type="hidden" id="tokenId" name="tokenId">
+                    <div class="form-group">
+                        <label for="mataPelajaran">Mata Pelajaran</label>
+                        <input type="text" id="mataPelajaran" name="mataPelajaran" required placeholder="Contoh: Matematika XII">
+                    </div>
+                    <div class="form-group">
+                        <label for="tokenValue">Token</label>
+                        <input type="text" id="tokenValue" name="tokenValue" required placeholder="Contoh: XYZ123ABC">
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select id="status" name="status">
+                            <option value="1">Aktif</option>
+                            <option value="0">Nonaktif</option>
+                        </select>
+                    </div>
+                    <div id="modalMessage" class="message-area"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="cancelModalBtn" class="btn btn-secondary">Batal</button>
+                    <button type="submit" id="saveTokenButton" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Simpan
+                        <span class="loader-inline" id="saveTokenButtonLoader"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyB41WbqOB7ZioNC6hMW6jKswxuSpnLjFrhqajNY7JINEPvwcdk4ALX4IPgyBb_StHR0Q/exec';
+    const SPREADSHEET_LINK = "https://docs.google.com/spreadsheets/d/1T0L8b6J8DdVQc1T6Oi37oahCWMVUFwB4u386ekLZhwo/edit?usp=sharing"; // GANTI DENGAN LINK GOOGLE SHEET ANDA YANG SEBENARNYA
+
+    let loginPageContainerEl, mainPageContainerEl, loginFormEl, loginButtonEl, 
+        loginButtonLoaderEl, loginMessageEl, logoutButtonEl, addTokenBtnEl, openSheetBtnEl,
+        mainPageMessageEl, mainLoaderEl, tokenTableBodyEl, tokenModalEl, 
+        closeModalBtnEl, cancelModalBtnEl, modalTitleEl, tokenFormEl, 
+        tokenIdInputEl, mataPelajaranInputEl, tokenValueInputEl, statusInputEl, 
+        saveTokenButtonEl, saveTokenButtonLoaderEl, modalMessageEl, paginationControlsEl;
+
+    let allTokens = [];
+    let currentPage = 1;
+    const tokensPerPage = 5; 
+
+    function cacheDOMElements() {
+        loginPageContainerEl = document.getElementById('loginPageContainer');
+        mainPageContainerEl = document.getElementById('mainPageContainer');
+        loginFormEl = document.getElementById('loginForm');
+        loginButtonEl = document.getElementById('loginButton');
+        loginButtonLoaderEl = document.getElementById('loginButtonLoader');
+        loginMessageEl = document.getElementById('loginMessage');
+        logoutButtonEl = document.getElementById('logoutButton');
+        addTokenBtnEl = document.getElementById('addTokenBtn');
+        openSheetBtnEl = document.getElementById('openSheetBtn'); 
+        mainPageMessageEl = document.getElementById('mainPageMessage');
+        mainLoaderEl = document.getElementById('mainLoader');
+        tokenTableBodyEl = document.querySelector('#tokenTable tbody');
+        tokenModalEl = document.getElementById('tokenModal');
+        closeModalBtnEl = document.getElementById('closeModalBtn');
+        cancelModalBtnEl = document.getElementById('cancelModalBtn');
+        modalTitleEl = document.getElementById('modalTitle');
+        tokenFormEl = document.getElementById('tokenForm');
+        tokenIdInputEl = document.getElementById('tokenId');
+        mataPelajaranInputEl = document.getElementById('mataPelajaran');
+        tokenValueInputEl = document.getElementById('tokenValue'); 
+        statusInputEl = document.getElementById('status');
+        saveTokenButtonEl = document.getElementById('saveTokenButton');
+        saveTokenButtonLoaderEl = document.getElementById('saveTokenButtonLoader');
+        modalMessageEl = document.getElementById('modalMessage');
+        paginationControlsEl = document.getElementById('paginationControls');
+    }
+
+    function showElement(el) { if(el) el.style.display = 'block'; }
+    function hideElement(el) { if(el) el.style.display = 'none'; }
+    function showFlexElement(el) { if(el) el.style.display = 'flex'; }
+    function showInlineLoader(loaderEl) { if(loaderEl) loaderEl.style.display = 'inline-block'; }
+    function hideInlineLoader(loaderEl) { if(loaderEl) loaderEl.style.display = 'none'; }
+    function disableButton(btn) { if(btn) btn.disabled = true; }
+    function enableButton(btn) { if(btn) btn.disabled = false; }
+
+    function displayMessage(element, message, isSuccess = true, timeout = 4000) {
+        if (!element) return;
+        element.textContent = message;
+        element.className = 'message-area';
+        if (isSuccess) element.classList.add('success');
+        else element.classList.add('error');
+        showElement(element);
+        if (timeout > 0) setTimeout(() => { hideElement(element); }, timeout);
+    }
+
+    async function callAppsScript(action, payload = {}, buttonToDisable, inlineLoader) {
+        if (buttonToDisable) disableButton(buttonToDisable);
+        if (inlineLoader) showInlineLoader(inlineLoader);
+        hideElement(loginMessageEl); hideElement(mainPageMessageEl); hideElement(modalMessageEl);
+
+        const params = new URLSearchParams();
+        params.append('action', action);
+        for (const key in payload) {
+            if (payload.hasOwnProperty(key)) {
+                params.append(key, payload[key]);
+            }
+        }
+        const fullUrl = `${SCRIPT_URL}?${params.toString()}`;
+        // console.log("Requesting URL (GET):", fullUrl); 
+
+        try {
+            const response = await fetch(fullUrl, { method: 'GET' });
+            if (!response.ok) {
+                let errorBodyText = "No additional details from server.";
+                try { errorBodyText = await response.text(); } catch (e) { /* ignore */ }
+                console.error(`HTTP error! Status: ${response.status}, Text: ${errorBodyText}`);
+                throw new Error(`Server responded with status ${response.status}.`);
+            }
+            const result = await response.json();
+            // console.log(`Response for ${action}:`, result); 
+            return result;
+        } catch (error) {
+            console.error(`Error calling Apps Script (GET) for action '${action}':`, error);
+            let errorDisplayElement = mainPageMessageEl;
+            if (action === 'login') errorDisplayElement = loginMessageEl;
+            else if (action === 'addToken' || action === 'editToken') errorDisplayElement = modalMessageEl;
+            displayMessage(errorDisplayElement, `Koneksi atau Server Error: ${error.message}`, false, 0);
+            return { success: false, message: `Connection Error: ${error.message}` };
+        } finally {
+            if (buttonToDisable) enableButton(buttonToDisable);
+            if (inlineLoader) hideInlineLoader(inlineLoader);
+        }
+    }
+
+    function showLoginPage() {
+        showElement(loginPageContainerEl); 
+        hideElement(mainPageContainerEl); 
+        sessionStorage.removeItem('loggedIn'); 
+        if(loginFormEl) loginFormEl.reset();
+    }
+
+    function showMainPage() {
+        hideElement(loginPageContainerEl); 
+        showElement(mainPageContainerEl); 
+        sessionStorage.setItem('loggedIn', 'true'); 
+        loadAndDisplayInitialTokens();
+    }
+    
+    function sanitizeInput(inputValue) {
+        if (typeof inputValue === 'string') {
+            return inputValue.replace(/,/g, '|'); 
+        }
+        return inputValue;
+    }
+
+    function addEventListeners() {
+        if(loginFormEl) {
+            loginFormEl.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const username = document.getElementById('username').value; 
+                const password = document.getElementById('password').value;
+                const result = await callAppsScript('login', { username, password }, loginButtonEl, loginButtonLoaderEl);
+                if (result.success) {
+                    showMainPage();
+                } else {
+                    displayMessage(loginMessageEl, result.error || result.message || 'Login gagal.', false, 0);
+                }
+            });
+        }
+
+        if(logoutButtonEl) logoutButtonEl.addEventListener('click', () => { showLoginPage(); });
+        
+        if(openSheetBtnEl) { 
+            openSheetBtnEl.href = SPREADSHEET_LINK;
+            if (SPREADSHEET_LINK === "#") {
+                openSheetBtnEl.title = "Link Spreadsheet belum diatur!";
+            }
+        }
+
+
+        if(addTokenBtnEl) {
+            addTokenBtnEl.addEventListener('click', () => {
+                modalTitleEl.innerHTML = '<i class="fas fa-key"></i> Tambah Token Baru';
+                if(tokenFormEl) tokenFormEl.reset();
+                if(tokenIdInputEl) tokenIdInputEl.value = ''; 
+                if(statusInputEl) statusInputEl.value = "1";
+                hideElement(modalMessageEl); showFlexElement(tokenModalEl);
+                if(mataPelajaranInputEl) mataPelajaranInputEl.focus();
+            });
+        }
+
+        if(closeModalBtnEl) closeModalBtnEl.addEventListener('click', closeModal);
+        if(cancelModalBtnEl) cancelModalBtnEl.addEventListener('click', closeModal);
+        
+        window.addEventListener('click', (event) => { if (event.target == tokenModalEl) closeModal(); });
+        window.addEventListener('keydown', (event) => { if (event.key === 'Escape' && tokenModalEl && tokenModalEl.style.display === 'flex') closeModal(); });
+
+        if(tokenFormEl) {
+            tokenFormEl.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const id = tokenIdInputEl.value;
+                const mataPelajaran = sanitizeInput(mataPelajaranInputEl.value);
+                const tokenVal = sanitizeInput(tokenValueInputEl.value); 
+                const status = statusInputEl.value;
+
+                mataPelajaranInputEl.value = mataPelajaran;
+                tokenValueInputEl.value = tokenVal;
+
+                const payload = {
+                    mataPelajaran: mataPelajaran, tokenValue: tokenVal, status: status
+                };
+                if (id) payload.id = id;
+                
+                const action = id ? 'editToken' : 'addToken';
+                const result = await callAppsScript(action, payload, saveTokenButtonEl, saveTokenButtonLoaderEl);
+
+                if (result.success) {
+                    closeModal(); 
+                    loadAndDisplayInitialTokens(); 
+                    displayMessage(mainPageMessageEl, result.message || (action === 'addToken' ? 'Token ditambahkan!' : 'Token diperbarui!'), true);
+                } else {
+                    displayMessage(modalMessageEl, result.error || result.message || 'Operasi gagal.', false, 0);
+                }
+            });
+        }
+    }
+    
+    function closeModal() { if(tokenModalEl) hideElement(tokenModalEl); }
+
+    async function loadAndDisplayInitialTokens() {
+        showElement(mainLoaderEl);
+        if(tokenTableBodyEl) tokenTableBodyEl.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 2rem;">Memuat data token... <i class="fas fa-spinner fa-spin"></i></td></tr>';
+        hideElement(paginationControlsEl); 
+
+        const result = await callAppsScript('getTokens');
+        hideElement(mainLoaderEl);
+
+        if (result.success && result.data) {
+            allTokens = result.data; 
+            currentPage = 1; 
+            displayTokensForCurrentPage(); 
+            setupPaginationControls(); 
+            if (allTokens.length === 0) displayMessage(mainPageMessageEl, "Belum ada token tersimpan.", true, 5000);
+            else hideElement(mainPageMessageEl);
+        } else {
+            displayMessage(mainPageMessageEl, result.error || result.message || 'Gagal memuat token.', false, 0);
+            if(tokenTableBodyEl) tokenTableBodyEl.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red; padding: 2rem;">Gagal memuat data. Silakan coba lagi.</td></tr>';
+        }
+    }
+    
+    function displayTokensForCurrentPage() {
+        if(!tokenTableBodyEl) return;
+        tokenTableBodyEl.innerHTML = '';
+        if (!allTokens || allTokens.length === 0) {
+            tokenTableBodyEl.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 2rem;">Tidak ada token ditemukan.</td></tr>';
+            hideElement(paginationControlsEl);
+            return;
+        }
+
+        const startIndex = (currentPage - 1) * tokensPerPage;
+        const endIndex = startIndex + tokensPerPage;
+        const tokensToDisplay = allTokens.slice(startIndex, endIndex);
+
+        if (tokensToDisplay.length === 0 && currentPage > 1) { 
+            currentPage--;
+            displayTokensForCurrentPage(); 
+            setupPaginationControls();
+            return;
+        }
+        if (tokensToDisplay.length === 0 && currentPage === 1) {
+             tokenTableBodyEl.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 2rem;">Tidak ada token ditemukan.</td></tr>';
+             hideElement(paginationControlsEl);
+             return;
+        }
+
+        tokensToDisplay.forEach(tokenData => {
+            const row = tokenTableBodyEl.insertRow();
+            row.insertCell().textContent = tokenData.MataPelajaran;
+            row.insertCell().textContent = tokenData.Token;
+            
+            const statusCell = row.insertCell();
+            const statusBadge = document.createElement('span');
+            statusBadge.classList.add('status-badge');
+            if (parseInt(tokenData.Status) === 1) { 
+                statusBadge.classList.add('status-aktif');
+                statusBadge.textContent = 'Aktif';
+            } else {
+                statusBadge.classList.add('status-nonaktif');
+                statusBadge.textContent = 'Nonaktif';
+            }
+            statusCell.appendChild(statusBadge);
+
+            const actionsCell = row.insertCell();
+            actionsCell.classList.add('actions');
+            
+            const editBtn = document.createElement('button');
+            editBtn.innerHTML = '<i class="fas fa-edit"></i> Edit';
+            editBtn.classList.add('btn', 'btn-sm', 'btn-primary');
+            editBtn.onclick = () => openModalForEdit(tokenData);
+            actionsCell.appendChild(editBtn);
+            
+            const deleteBtn = document.createElement('button');
+            deleteBtn.innerHTML = '<i class="fas fa-trash"></i> Hapus';
+            deleteBtn.classList.add('btn', 'btn-sm', 'btn-danger');
+            deleteBtn.onclick = () => deleteTokenHandler(tokenData.ID, tokenData.MataPelajaran);
+            actionsCell.appendChild(deleteBtn);
+        });
+        if(allTokens.length > 0 && paginationControlsEl) showElement(paginationControlsEl);
+    }
+
+    function setupPaginationControls() {
+        if(!paginationControlsEl) return;
+        paginationControlsEl.innerHTML = '';
+        if (!allTokens || allTokens.length <= tokensPerPage) {
+            hideElement(paginationControlsEl);
+            return; 
+        }
+
+        const totalPages = Math.ceil(allTokens.length / tokensPerPage);
+
+        const prevButton = document.createElement('button');
+        prevButton.innerHTML = '<i class="fas fa-chevron-left"></i> Seb';
+        prevButton.classList.add('btn', 'btn-secondary');
+        prevButton.disabled = currentPage === 1;
+        prevButton.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                displayTokensForCurrentPage();
+                setupPaginationControls(); 
+            }
+        });
+        paginationControlsEl.appendChild(prevButton);
+
+        const pageInfo = document.createElement('span');
+        pageInfo.classList.add('page-info');
+        pageInfo.textContent = `Hal ${currentPage} dari ${totalPages}`;
+        paginationControlsEl.appendChild(pageInfo);
+        
+        const nextButton = document.createElement('button');
+        nextButton.innerHTML = 'Ber <i class="fas fa-chevron-right"></i>';
+        nextButton.classList.add('btn', 'btn-secondary');
+        nextButton.disabled = currentPage === totalPages;
+        nextButton.addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                displayTokensForCurrentPage();
+                setupPaginationControls(); 
+            }
+        });
+        paginationControlsEl.appendChild(nextButton);
+        showElement(paginationControlsEl);
+    }
+
+    function openModalForEdit(tokenData) {
+        if(modalTitleEl) modalTitleEl.innerHTML = '<i class="fas fa-edit"></i> Edit Token';
+        if(tokenFormEl) tokenFormEl.reset();
+        if(tokenIdInputEl) tokenIdInputEl.value = tokenData.ID;
+        if(mataPelajaranInputEl) mataPelajaranInputEl.value = tokenData.MataPelajaran;
+        if(tokenValueInputEl) tokenValueInputEl.value = tokenData.Token;
+        if(statusInputEl) statusInputEl.value = tokenData.Status.toString(); 
+        hideElement(modalMessageEl); showFlexElement(tokenModalEl);
+        if(mataPelajaranInputEl) mataPelajaranInputEl.focus();
+    }
+
+    async function deleteTokenHandler(id, mapel) {
+        if (!confirm(`Apakah Anda yakin ingin menghapus token untuk mata pelajaran "${mapel}"? Tindakan ini tidak dapat diurungkan.`)) return;
+        showElement(mainLoaderEl);
+        const result = await callAppsScript('deleteToken', { id });
+        hideElement(mainLoaderEl);
+        if (result.success) {
+            loadAndDisplayInitialTokens(); 
+            displayMessage(mainPageMessageEl, result.message || 'Token berhasil dihapus!', true);
+        } else {
+            displayMessage(mainPageMessageEl, result.error || result.message || 'Gagal menghapus token.', false, 0);
+        }
+    }
+
+    function initializeApp() {
+        cacheDOMElements(); 
+        addEventListeners(); 
+
+        if (!SCRIPT_URL || SCRIPT_URL === 'PASTE_YOUR_WEB_APP_URL_HERE_USING_doGet' || !SCRIPT_URL.startsWith('https://script.google.com/')) {
+            if (SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbyB41WbqOB7ZioNC6hMW6jKswxuSpnLjFrhqajNY7JINEPvwcdk4ALX4IPgyBb_StHR0Q/exec') { 
+                 alert("URL Script Google Apps belum dikonfigurasi dengan benar di JavaScript!");
+                 if(loginMessageEl) displayMessage(loginMessageEl, "Konfigurasi URL API error!", false, 0);
+                 if(loginButtonEl) disableButton(loginButtonEl); return;
+            }
+        }
+        if (sessionStorage.getItem('loggedIn') === 'true') showMainPage();
+        else showLoginPage();
+    }
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    } else {
+        initializeApp();
+    }
+
+</script>
+</body>
+</html>
