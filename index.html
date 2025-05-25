@@ -27,6 +27,8 @@
             color: var(--text-color); display: flex; flex-direction: column;
             align-items: center; min-height: 100vh; padding: 1rem;
             box-sizing: border-box; font-size: 0.9375rem; line-height: 1.6;
+            position: relative; /* Untuk positioning footer */
+            padding-bottom: 4rem; /* Beri ruang untuk footer */
         }
         .container {
             background-color: var(--card-bg-color); padding: 20px;
@@ -44,7 +46,7 @@
         h1 { font-size: 1.6rem; } h2 { font-size: 1.4rem; } h3 { font-size: 1.2rem; }
         .form-group { margin-bottom: 1rem; }
         label { display: block; margin-bottom: 0.4rem; font-weight: 500; color: #555; font-size: 0.9rem;}
-        input[type="text"], input[type="password"], input[type="number"], select {
+        input[type="text"], input[type="password"], input[type="number"], input[type="search"], select {
             width: 100%; padding: 0.65rem 0.9rem; border: 1px solid var(--border-color);
             border-radius: var(--border-radius); box-sizing: border-box; font-family: var(--font-family);
             font-size: 0.9rem; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -96,6 +98,10 @@
             margin-bottom: 1.2rem; flex-wrap: wrap; gap: 0.5rem; 
         }
         
+        .search-container { 
+            margin-bottom: 1rem;
+        }
+        
         .table-container {
             overflow-x: auto; border: 1px solid var(--border-color);
             border-radius: var(--border-radius); margin-bottom: 1.2rem;
@@ -103,9 +109,20 @@
         table { width: 100%; border-collapse: collapse; }
         th, td {
             border-bottom: 1px solid var(--border-color); padding: 0.7rem 0.8rem; text-align: left;
-            vertical-align: middle; font-size: 0.85rem; white-space: nowrap;
+            vertical-align: middle; font-size: 0.85rem; 
         }
-        td:nth-child(1), th:nth-child(1) { white-space: normal; } 
+        th:nth-child(1), td:nth-child(1) { 
+            width: 40px; 
+            text-align: center;
+            white-space: nowrap;
+        }
+        th:nth-child(2), td:nth-child(2) { 
+             white-space: normal; 
+        }
+        th:nth-child(3), td:nth-child(3) { 
+             white-space: nowrap;
+        }
+
         th {
             background-color: var(--light-color); color: var(--dark-color); font-weight: 600;
             text-transform: uppercase; letter-spacing: 0.5px; border-bottom-width: 2px;
@@ -116,11 +133,12 @@
         .status-badge {
             padding: 0.25em 0.5em; font-size: 0.7em; font-weight: 600;
             border-radius: 0.25rem; color: white; display: inline-block;
+            white-space: nowrap; 
         }
         .status-aktif { background-color: var(--success-color); }
         .status-nonaktif { background-color: var(--danger-color); }
         
-        .actions { display: flex; gap: 0.3rem;} 
+        .actions { display: flex; gap: 0.3rem; white-space: nowrap;} 
         .actions button { margin-right: 0; } 
         .actions button i { margin-right: 4px; }
         .actions .btn-primary { background-color: #3B82F6; }
@@ -180,6 +198,50 @@
             background-color: #e9ecef; color: #6c757d; cursor: not-allowed; transform: none;
         }
 
+        .sync-info-note {
+            text-align: center; 
+            margin-bottom: 1rem; 
+            padding: 0.5rem 0.8rem;
+            font-style: italic; 
+            font-size: 0.85rem; 
+            color: var(--secondary-color);
+            background-color: #f8f9fa; 
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+        }
+        .sync-info-note i {
+            margin-right: 5px;
+            color: var(--info-color);
+        }
+
+        /* --- STYLING UNTUK FOOTER --- */
+        .page-footer {
+            position: absolute; /* Menempel di bawah */
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            padding: 1rem 0;
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            background-color: var(--background-color); /* Sama dengan background body */
+            border-top: 1px solid var(--border-color);
+        }
+        .page-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .page-footer a:hover {
+            color: var(--primary-hover-color);
+            text-decoration: underline;
+        }
+        .page-footer .fa-heart {
+            color: var(--danger-color);
+            margin: 0 3px;
+        }
+
+
         /* Mobile Specific Overrides */
         @media (max-width: 575.98px) { 
             .header-controls { flex-direction: column; align-items: stretch; }
@@ -187,18 +249,18 @@
             .header-controls .btn#logoutButton { margin-left: 0; margin-top: 0.5rem; width: 100%;}
             
             .page-actions { 
-                display: grid; /* Menggunakan grid untuk kontrol kolom yang lebih baik */
-                grid-template-columns: 1fr; /* Satu kolom */
+                display: grid;
+                grid-template-columns: 1fr; 
                 gap: 0.75rem; 
             } 
             .page-actions .btn { 
-                width: 100%; /* Tombol akan mengisi lebar grid cell */
-                padding: 0.7rem 0.8rem; /* Sesuaikan padding untuk mobile */
+                width: 100%; 
+                padding: 0.7rem 0.8rem; 
                 font-size: 0.85rem; 
-                white-space: normal; /* Izinkan teks tombol untuk wrap */
+                white-space: normal; 
                 text-align: center; 
-                line-height: 1.4; /* Sedikit lebihkan line-height untuk teks wrap */
-                box-sizing: border-box; /* Penting agar padding tidak menambah lebar */
+                line-height: 1.4; 
+                box-sizing: border-box; 
             }
 
             .actions { flex-direction: column; } 
@@ -207,15 +269,16 @@
             .modal-footer .btn { width: 100%; }
             .pagination-controls .btn { padding: 0.4rem 0.6rem; font-size: 0.8rem; }
             .pagination-controls .page-info { font-size: 0.85rem; }
+            .page-footer { font-size: 0.75rem; } /* Sedikit kecilkan font footer di mobile */
         }
 
         @media (min-width: 576px) { /* Desktop Overrides */
-            body { padding: 1.5rem; }
+            body { padding: 1.5rem; padding-bottom: 4.5rem; /* Sesuaikan padding bottom untuk footer */ }
             .container { padding: 25px 30px; margin-top: 2rem;} 
             #loginPageContainer { max-width: 450px; margin-top: 8vh;}
             h1 { font-size: 1.8rem; } h2 { font-size: 1.6rem; } h3 { font-size: 1.4rem; }
             label { font-size: initial; } 
-            input[type="text"], input[type="password"], input[type="number"], select {
+            input[type="text"], input[type="password"], input[type="number"], input[type="search"], select {
                 padding: 0.75rem 1rem; font-size: 0.95rem;
             }
             .btn { padding: 0.75rem 1.5rem; font-size: 0.95rem; }
@@ -225,7 +288,7 @@
             .header-controls { flex-direction: row; align-items: center; }
             .header-controls h2 { text-align: left; margin-bottom: 0; }
             .header-controls .btn#logoutButton { margin-top: 0; width: auto;}
-             .page-actions .btn { width: auto; /* Kembalikan ke auto untuk desktop */ } 
+             .page-actions .btn { width: auto; } 
             th, td { padding: 0.9rem 1rem; font-size: 0.9rem; }
             .status-badge { font-size: 0.75em; }
             .actions { flex-direction: row; } 
@@ -259,7 +322,6 @@
                 <span class="loader-inline" id="loginButtonLoader"></span>
             </button>
         </form>
-        <!-- Link Halaman Siswa di halaman login (seperti sebelumnya) -->
         <div style="text-align: center; margin-top: 1.25rem; margin-bottom: 0.5rem;">
             <a href="https://sites.google.com/smkn1telagasarikotabaru.sch.id/sumatif/" target="_blank" rel="noopener noreferrer" class="btn btn-info" style="text-transform: none; letter-spacing: normal; padding: 0.6rem 1rem; font-size: 0.85rem;">
                 <i class="fas fa-graduation-cap"></i> Buka Halaman Siswa
@@ -278,18 +340,26 @@
             <a href="#" id="openSheetBtn" class="btn btn-info" target="_blank" title="Buka Google Sheet (ganti link #)">
                 <i class="fas fa-table-list"></i> Buka Spreadsheet
             </a>
-            <!-- ===== PENAMBAHAN LINK HALAMAN SISWA SETELAH LOGIN DIMULAI DI SINI ===== -->
             <a href="https://sites.google.com/smkn1telagasarikotabaru.sch.id/sumatif/" target="_blank" rel="noopener noreferrer" class="btn btn-info">
                 <i class="fas fa-graduation-cap"></i> Halaman Siswa
             </a>
-            <!-- ===== PENAMBAHAN LINK HALAMAN SISWA SETELAH LOGIN SELESAI DI SINI ===== -->
         </div>
         <div id="mainPageMessage" class="message-area"></div>
         <div class="loader" id="mainLoader"></div>
+
+        <div class="sync-info-note">
+            <i class="fas fa-info-circle"></i> Catatan: Setelah melakukan perubahan data (tambah, edit, atau hapus token), pembaruan pada tabel mungkin memerlukan waktu sekitar 1 menit untuk sinkronisasi dan ditampilkan.
+        </div>
+        
+        <div class="search-container">
+            <input type="search" id="searchInput" placeholder="Cari Mata Pelajaran atau Token...">
+        </div>
+        
         <div class="table-container">
             <table id="tokenTable">
                 <thead>
                     <tr>
+                        <th>No.</th>
                         <th>Mata Pelajaran</th>
                         <th>Token</th>
                         <th>Status</th>
@@ -343,20 +413,30 @@
         </div>
     </div>
 
+    <!-- ===== PENAMBAHAN FOOTER DIMULAI DI SINI ===== -->
+    <footer class="page-footer">
+        Dibuat dengan <i class="fas fa-heart"></i> oleh 
+        <a href="https://www.instagram.com/wajibhimung/" target="_blank" rel="noopener noreferrer">wajibhimung</a>
+    </footer>
+    <!-- ===== PENAMBAHAN FOOTER SELESAI DI SINI ===== -->
+
 <script>
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyB41WbqOB7ZioNC6hMW6jKswxuSpnLjFrhqajNY7JINEPvwcdk4ALX4IPgyBb_StHR0Q/exec';
-    const SPREADSHEET_LINK = "https://docs.google.com/spreadsheets/d/1T0L8b6J8DdVQc1T6Oi37oahCWMVUFwB4u386ekLZhwo/edit?usp=sharing"; // GANTI DENGAN LINK GOOGLE SHEET ANDA YANG SEBENARNYA
+    const SPREADSHEET_LINK = "https://docs.google.com/spreadsheets/d/1T0L8b6J8DdVQc1T6Oi37oahCWMVUFwB4u386ekLZhwo/edit?usp=sharing"; 
 
     let loginPageContainerEl, mainPageContainerEl, loginFormEl, loginButtonEl, 
         loginButtonLoaderEl, loginMessageEl, logoutButtonEl, addTokenBtnEl, openSheetBtnEl,
         mainPageMessageEl, mainLoaderEl, tokenTableBodyEl, tokenModalEl, 
         closeModalBtnEl, cancelModalBtnEl, modalTitleEl, tokenFormEl, 
         tokenIdInputEl, mataPelajaranInputEl, tokenValueInputEl, statusInputEl, 
-        saveTokenButtonEl, saveTokenButtonLoaderEl, modalMessageEl, paginationControlsEl;
+        saveTokenButtonEl, saveTokenButtonLoaderEl, modalMessageEl, paginationControlsEl,
+        searchInputEl; 
 
     let allTokens = [];
+    let filteredTokens = []; 
     let currentPage = 1;
-    const tokensPerPage = 5; 
+    const tokensPerPage = 10; 
+    let searchTimeout; 
 
     function cacheDOMElements() {
         loginPageContainerEl = document.getElementById('loginPageContainer');
@@ -384,6 +464,7 @@
         saveTokenButtonLoaderEl = document.getElementById('saveTokenButtonLoader');
         modalMessageEl = document.getElementById('modalMessage');
         paginationControlsEl = document.getElementById('paginationControls');
+        searchInputEl = document.getElementById('searchInput');
     }
 
     function showElement(el) { if(el) el.style.display = 'block'; }
@@ -417,8 +498,7 @@
             }
         }
         const fullUrl = `${SCRIPT_URL}?${params.toString()}`;
-        // console.log("Requesting URL (GET):", fullUrl); 
-
+        
         try {
             const response = await fetch(fullUrl, { method: 'GET' });
             if (!response.ok) {
@@ -428,7 +508,6 @@
                 throw new Error(`Server responded with status ${response.status}.`);
             }
             const result = await response.json();
-            // console.log(`Response for ${action}:`, result); 
             return result;
         } catch (error) {
             console.error(`Error calling Apps Script (GET) for action '${action}':`, error);
@@ -448,6 +527,7 @@
         hideElement(mainPageContainerEl); 
         sessionStorage.removeItem('loggedIn'); 
         if(loginFormEl) loginFormEl.reset();
+        if(searchInputEl) searchInputEl.value = ''; 
     }
 
     function showMainPage() {
@@ -487,7 +567,6 @@
                 openSheetBtnEl.title = "Link Spreadsheet belum diatur!";
             }
         }
-
 
         if(addTokenBtnEl) {
             addTokenBtnEl.addEventListener('click', () => {
@@ -534,13 +613,32 @@
                 }
             });
         }
+
+        if(searchInputEl) {
+            searchInputEl.addEventListener('input', () => {
+                clearTimeout(searchTimeout); 
+                searchTimeout = setTimeout(() => { 
+                    currentPage = 1; 
+                    filterAndDisplayTokens();
+                }, 300); 
+            });
+            searchInputEl.addEventListener('search', () => {
+                if (searchInputEl.value === '') { 
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        currentPage = 1;
+                        filterAndDisplayTokens();
+                    }, 300); 
+                }
+            });
+        }
     }
     
     function closeModal() { if(tokenModalEl) hideElement(tokenModalEl); }
 
     async function loadAndDisplayInitialTokens() {
         showElement(mainLoaderEl);
-        if(tokenTableBodyEl) tokenTableBodyEl.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 2rem;">Memuat data token... <i class="fas fa-spinner fa-spin"></i></td></tr>';
+        if(tokenTableBodyEl) tokenTableBodyEl.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 2rem;">Memuat data token... <i class="fas fa-spinner fa-spin"></i></td></tr>`;
         hideElement(paginationControlsEl); 
 
         const result = await callAppsScript('getTokens');
@@ -548,44 +646,63 @@
 
         if (result.success && result.data) {
             allTokens = result.data; 
-            currentPage = 1; 
-            displayTokensForCurrentPage(); 
-            setupPaginationControls(); 
+            filterAndDisplayTokens(); 
             if (allTokens.length === 0) displayMessage(mainPageMessageEl, "Belum ada token tersimpan.", true, 5000);
             else hideElement(mainPageMessageEl);
         } else {
             displayMessage(mainPageMessageEl, result.error || result.message || 'Gagal memuat token.', false, 0);
-            if(tokenTableBodyEl) tokenTableBodyEl.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red; padding: 2rem;">Gagal memuat data. Silakan coba lagi.</td></tr>';
+            if(tokenTableBodyEl) tokenTableBodyEl.innerHTML = `<tr><td colspan="5" style="text-align:center; color:red; padding: 2rem;">Gagal memuat data. Silakan coba lagi.</td></tr>`;
         }
+    }
+
+    function filterAndDisplayTokens() {
+        const searchTerm = searchInputEl.value.toLowerCase().trim();
+        if (searchTerm) {
+            filteredTokens = allTokens.filter(token => 
+                token.MataPelajaran.toLowerCase().includes(searchTerm) ||
+                token.Token.toLowerCase().includes(searchTerm)
+            );
+        } else {
+            filteredTokens = [...allTokens]; 
+        }
+        currentPage = 1; 
+        displayTokensForCurrentPage();
+        setupPaginationControls();
     }
     
     function displayTokensForCurrentPage() {
         if(!tokenTableBodyEl) return;
         tokenTableBodyEl.innerHTML = '';
-        if (!allTokens || allTokens.length === 0) {
-            tokenTableBodyEl.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 2rem;">Tidak ada token ditemukan.</td></tr>';
+        
+        const startIndex = (currentPage - 1) * tokensPerPage; 
+        const endIndex = startIndex + tokensPerPage;
+        const tokensToDisplay = filteredTokens.slice(startIndex, endIndex);
+
+        if (filteredTokens.length === 0) { 
+            const searchTerm = searchInputEl.value.trim();
+            const message = searchTerm ? 
+                `Tidak ada token ditemukan untuk pencarian "${searchTerm}".` : 
+                "Tidak ada token ditemukan.";
+            tokenTableBodyEl.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 2rem;">${message}</td></tr>`; 
             hideElement(paginationControlsEl);
             return;
         }
-
-        const startIndex = (currentPage - 1) * tokensPerPage;
-        const endIndex = startIndex + tokensPerPage;
-        const tokensToDisplay = allTokens.slice(startIndex, endIndex);
-
+        
         if (tokensToDisplay.length === 0 && currentPage > 1) { 
             currentPage--;
             displayTokensForCurrentPage(); 
             setupPaginationControls();
             return;
         }
-        if (tokensToDisplay.length === 0 && currentPage === 1) {
-             tokenTableBodyEl.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 2rem;">Tidak ada token ditemukan.</td></tr>';
-             hideElement(paginationControlsEl);
-             return;
-        }
 
-        tokensToDisplay.forEach(tokenData => {
+
+        tokensToDisplay.forEach((tokenData, index) => { 
             const row = tokenTableBodyEl.insertRow();
+            
+            const numberCell = row.insertCell();
+            numberCell.textContent = startIndex + index + 1; 
+            numberCell.style.textAlign = 'center'; 
+
             row.insertCell().textContent = tokenData.MataPelajaran;
             row.insertCell().textContent = tokenData.Token;
             
@@ -616,18 +733,19 @@
             deleteBtn.onclick = () => deleteTokenHandler(tokenData.ID, tokenData.MataPelajaran);
             actionsCell.appendChild(deleteBtn);
         });
-        if(allTokens.length > 0 && paginationControlsEl) showElement(paginationControlsEl);
+        if(filteredTokens.length > 0 && paginationControlsEl) showElement(paginationControlsEl);
     }
 
     function setupPaginationControls() {
         if(!paginationControlsEl) return;
         paginationControlsEl.innerHTML = '';
-        if (!allTokens || allTokens.length <= tokensPerPage) {
+        
+        if (!filteredTokens || filteredTokens.length <= tokensPerPage) {
             hideElement(paginationControlsEl);
             return; 
         }
 
-        const totalPages = Math.ceil(allTokens.length / tokensPerPage);
+        const totalPages = Math.ceil(filteredTokens.length / tokensPerPage);
 
         const prevButton = document.createElement('button');
         prevButton.innerHTML = '<i class="fas fa-chevron-left"></i> Seb';
