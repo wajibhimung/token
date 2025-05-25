@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Token Mata Pelajaran</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --info-color: #17a2b8;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --light-gray: #f8f9fa;
+            --dark-gray: #343a40;
+            --white: #ffffff;
+            --text-color: #212529;
+            --border-color: #dee2e6;
+            --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            --border-radius: .35rem;
+            --box-shadow-sm: 0 .125rem .25rem rgba(0,0,0,.075);
+            --box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+            --box-shadow-lg: 0 1rem 3rem rgba(0,0,0,.125);
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-family-sans-serif);
+            background-color: var(--white);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container-fluid {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px;
+            box-sizing: border-box;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        header h1 {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            margin-bottom: 0.75rem;
+            color: var(--dark-gray);
+            font-weight: 600;
+        }
+
+        header p {
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            color: var(--secondary-color);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #searchInput {
+            margin-bottom: 30px;
+            border-radius: var(--border-radius);
+            padding: 12px 18px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--box-shadow-sm);
+            font-size: 1rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        #searchInput:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 .2rem rgba(0,123,255,.25), var(--box-shadow-sm);
+            outline: none;
+        }
+        #searchInput::placeholder {
+            color: #999;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            box-shadow: var(--box-shadow);
+            border-radius: var(--border-radius);
+            background-color: var(--white);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 0;
+        }
+
+        .table th, .table td {
+            border-bottom: 1px solid var(--border-color);
+            padding: 14px 18px;
+            text-align: left;
+            vertical-align: middle;
+        }
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table th {
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .table td:first-child {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1.05em;
+        }
+
+
+        .copy-button {
+            cursor: pointer;
+            padding: 9px 18px;
+            background-color: var(--info-color);
+            color: var(--white);
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            box-shadow: var(--box-shadow-sm);
+        }
+        .copy-button:hover {
+            background-color: #138496;
+            transform: translateY(-1px);
+            box-shadow: 0 .25rem .5rem rgba(0,0,0,.1);
+        }
+        .copy-button:active {
+            transform: translateY(0px);
+            box-shadow: var(--box-shadow-sm);
+        }
+        .copy-button .icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+        .copy-button .button-text {
+            transition: opacity 0.2s ease;
+        }
+        .copy-button.copied {
+            background-color: var(--success-color);
+        }
+        .copy-button.copied:hover {
+            background-color: #1e7e34;
+        }
+
+
+        #loading {
+            display: none; 
+            align-items: center; 
+            justify-content: center; 
+            text-align: center;
+            padding: 40px 0;
+            color: var(--secondary-color);
+            font-size: 1rem;
+        }
+        #loading::before {
+            content: "";
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(0,0,0,0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+
+        #scrollNotice {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--white);
+            background-color: rgba(0, 0, 0, 0.75);
+            padding: 8px 15px;
+            border-radius: 20px;
+            z-index: 1000;
+            animation: fadeInOut 3s infinite alternate ease-in-out;
+            box-shadow: var(--box-shadow);
+            opacity: 0;
+        }
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+            20%, 80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 768px) {
+            .container-fluid {
+                padding: 20px 15px;
+            }
+            header h1 { font-size: 1.7rem; }
+            header p { font-size: 0.9rem; }
+
+            .table-wrapper {
+                box-shadow: none;
+                border-radius: 0;
+                overflow-x: visible;
+            }
+            .table thead {
+                display: none;
+            }
+
+            .table, .table tbody, .table tr, .table td {
+                display: block;
+                width: 100%;
+            }
+
+            .table tr {
+                margin-bottom: 20px;
+                border-radius: var(--border-radius);
+                background-color: var(--white);
+                box-shadow: var(--box-shadow);
+                overflow: hidden;
+                padding: 0;
+                border: 1px solid var(--border-color);
+            }
+
+            .table td {
+                padding: 15px;
+                position: relative;
+                display: flex;
+                align-items: flex-start;
+                flex-direction: column;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .table tr td:last-child { border-bottom: none; }
+
+            .table td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: var(--secondary-color);
+                font-size: 0.8rem;
+                margin-bottom: 6px;
+                text-transform: uppercase;
+                display: block;
+            }
+
+            .table td[data-label="Kelas - Mata Pelajaran"] {
+                font-size: 1.15rem;
+                font-weight: 700;
+                color: var(--primary-color);
+            }
+
+
+            .table td[data-label="Token"] {
+                font-size: 1rem;
+                font-weight: 500;
+                color: var(--dark-gray);
+                word-break: break-all;
+            }
+
+            .table td[data-label="Action"] {
+                background-color: var(--light-gray);
+                align-items: center;
+            }
+            .table td[data-label="Action"]::before {
+                 margin-bottom: 10px;
+            }
+            .copy-button {
+                width: 100%;
+                justify-content: center;
+                padding: 12px 15px;
+                font-size: 1rem;
+            }
+        }
+
+        .no-data-message {
+            text-align: center;
+            padding: 30px 20px;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+            color: var(--secondary-color);
+            font-style: normal;
+            font-size: 1rem;
+            border: 1px dashed var(--border-color);
+        }
+        .no-data-message strong {
+            color: var(--dark-gray);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <header>
+            <h1>Daftar Token Mata Pelajaran</h1>
+            <p>Temukan dan salin token mata pelajaran Anda dengan cepat dan mudah.</p>
+        </header>
+
+        <div class="form-group">
+            <input type="text" id="searchInput" class="form-control" placeholder="Ketik untuk mencari Kelas, Mapel, atau Token...">
+        </div>
+
+        <div id="loading">Memuat data, harap tunggu...</div>
+
+        <div class="table-wrapper">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Kelas - Mata Pelajaran</th>
+                        <th>Token</th>
+                        <th>Tindakan</th>
+                    </tr>
+                </thead>
+                <tbody id="dataBody">
+                    <!-- Data akan di-load di sini -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="scrollNotice">Scroll ke bawah untuk data lainnya</div>
+
+    <script>
+        const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQEaSoa-I1JWbwHy12zAR3NxeLbRxneKsJtyN9716Tdw3YxVOmGrymfSrIs2hjKBIOqhB1sedaPgzy3/pub?gid=577109510&single=true&output=csv";
+
+        const iconCopy = `<svg class="icon" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>`;
+        const iconCopied = `<svg class="icon" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>`;
+
+        async function fetchData() {
+            const loadingElement = document.getElementById('loading');
+            loadingElement.style.display = 'flex';
+            try {
+                const timestamp = new Date().getTime();
+                const uniqueParam = `v=${timestamp}`; // Cache busting parameter
+                // Pastikan URL dasar tidak mengandung parameter output=csv dua kali
+                // URL dari Google biasanya sudah benar, kita hanya menambahkan parameter unik
+                const finalUrl = `${SHEET_CSV_URL}&${uniqueParam}`;
+
+                const response = await fetch(finalUrl, {
+                    cache: 'reload' // Instruksi tambahan ke browser untuk tidak menggunakan cache lokal
+                });
+
+                if (!response.ok) throw new Error("Gagal mengambil data dari Google Sheet. Status: " + response.status);
+                const csvData = await response.text();
+                loadingElement.style.display = 'none';
+                return csvData;
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                loadingElement.innerHTML = `⚠️ Gagal memuat data. ${error.message}. Coba refresh.`;
+                return "";
+            }
+        }
+
+        function populateTable(csvData) {
+            const rows = csvData.split("\n").slice(1);
+            const tbody = document.getElementById("dataBody");
+            tbody.innerHTML = "";
+
+            let dataAvailable = false;
+            rows.forEach(row => {
+                if (row.trim() === "") return;
+                const columns = row.split(",");
+                if (columns.length < 4) {
+                    console.warn("Skipping malformed row:", row);
+                    return;
+                }
+                const [id, kelasFull, token, active] = columns.map(col => col.trim());
+
+                if (active && active === "1") {
+                    dataAvailable = true;
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td data-label="Kelas - Mata Pelajaran">${kelasFull}</td>
+                        <td data-label="Token">${token}</td>
+                        <td data-label="Tindakan">
+                            <button class="copy-button" onclick="handleCopy(this, '${token}')" aria-label="Salin token ${token}">
+                                <span class="icon-container">${iconCopy}</span>
+                                <span class="button-text">Salin</span>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+            });
+
+            const tableWrapper = document.querySelector('.table-wrapper');
+            if (!dataAvailable) {
+                if (rows.some(r => r.trim() !== "")) {
+                     tbody.innerHTML = `<tr><td colspan="3" class="no-data-message">Saat ini tidak ada token aktif yang ditemukan.</td></tr>`;
+                } else {
+                     tbody.innerHTML = `<tr><td colspan="3" class="no-data-message">Belum ada data token yang tersedia. Periksa kembali nanti.</td></tr>`;
+                }
+                if (tableWrapper) tableWrapper.style.boxShadow = 'none';
+            } else if (tableWrapper) {
+                 tableWrapper.style.boxShadow = 'var(--box-shadow)';
+            }
+        }
+
+        let copyTimeout = null;
+        function handleCopy(buttonElement, token) {
+            if (copyTimeout) clearTimeout(copyTimeout);
+
+            const el = document.createElement("textarea");
+            el.value = token;
+            el.style.position = 'absolute';
+            el.style.left = '-9999px';
+            document.body.appendChild(el);
+            el.select();
+            try {
+                document.execCommand("copy");
+
+                const buttonTextElement = buttonElement.querySelector('.button-text');
+                const iconContainerElement = buttonElement.querySelector('.icon-container');
+
+                buttonTextElement.textContent = 'Tersalin!';
+                iconContainerElement.innerHTML = iconCopied;
+                buttonElement.classList.add('copied');
+
+                copyTimeout = setTimeout(() => {
+                    buttonTextElement.textContent = 'Salin';
+                    iconContainerElement.innerHTML = iconCopy;
+                    buttonElement.classList.remove('copied');
+                }, 2000);
+
+            } catch (err) {
+                alert('Gagal menyalin token. Browser Anda mungkin tidak mendukung fitur ini.');
+                console.error('Fallback: Oops, unable to copy', err);
+            }
+            document.body.removeChild(el);
+        }
+
+        function filterTable() {
+            const searchValue = document.getElementById("searchInput").value.toLowerCase();
+            const tbody = document.getElementById("dataBody");
+            const rows = tbody.querySelectorAll("tr");
+            let visibleRows = 0;
+            let isInitialNoDataMessagePresent = false;
+
+            const existingNoResultsRow = document.getElementById("noResultsRow");
+            if (existingNoResultsRow) existingNoResultsRow.remove();
+
+            rows.forEach(row => {
+                const noDataCell = row.querySelector('td.no-data-message');
+
+                if (noDataCell) {
+                    isInitialNoDataMessagePresent = true;
+                    if (searchValue) {
+                        row.style.display = "none";
+                    } else {
+                        row.style.display = "";
+                    }
+                    return;
+                }
+
+                if (row.id === "noResultsRow") {
+                    row.style.display = "none";
+                    return;
+                }
+
+                const kelasCell = row.querySelector('td[data-label="Kelas - Mata Pelajaran"]');
+                const tokenCell = row.querySelector('td[data-label="Token"]');
+
+                if (!kelasCell || !tokenCell) {
+                    row.style.display = "none";
+                    return;
+                }
+
+                const kelasText = kelasCell.textContent.toLowerCase();
+                const token = tokenCell.textContent.toLowerCase();
+
+                if (kelasText.includes(searchValue) || token.includes(searchValue)) {
+                    row.style.display = "";
+                    visibleRows++;
+                } else {
+                    row.style.display = "none";
+                }
+            });
+
+            const tableWrapper = document.querySelector('.table-wrapper');
+
+            if (visibleRows === 0 && searchValue !== "" && !isInitialNoDataMessagePresent) {
+                let noResultsRow = document.createElement("tr");
+                noResultsRow.id = "noResultsRow";
+                noResultsRow.innerHTML = `<td colspan="3" class="no-data-message">Tidak ditemukan hasil untuk "<strong>${document.getElementById("searchInput").value}</strong>".</td>`;
+                tbody.appendChild(noResultsRow);
+                if (tableWrapper) tableWrapper.style.boxShadow = 'none';
+            } else if (visibleRows > 0 && tableWrapper) {
+                tableWrapper.style.boxShadow = 'var(--box-shadow)';
+            } else if (isInitialNoDataMessagePresent && !searchValue && tableWrapper){
+                 tableWrapper.style.boxShadow = 'none';
+            }
+        }
+
+        document.getElementById("searchInput").addEventListener("input", filterTable);
+
+        (async () => {
+            const csvData = await fetchData();
+            const tbody = document.getElementById("dataBody");
+            const tableWrapper = document.querySelector('.table-wrapper');
+            const loadingElement = document.getElementById('loading');
+
+            if (csvData) {
+                populateTable(csvData);
+            } else {
+                if (loadingElement.style.display !== 'none' && !loadingElement.textContent.includes("Gagal")) {
+                     tbody.innerHTML = `<tr><td colspan="3" class="no-data-message">Gagal memuat data atau data tidak valid.</td></tr>`;
+                }
+                if (tableWrapper) tableWrapper.style.boxShadow = 'none';
+            }
+            filterTable();
+        })();
+    </script>
+</body>
+</html>
